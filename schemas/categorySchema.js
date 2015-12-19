@@ -1,6 +1,6 @@
 "use strict";
 var mongoose = require('mongoose');
-var db = mongoose.connect('mongodb://localhost/calender');
+var db = mongoose.connect('mongodb://localhost/calendar');
 var Schema = mongoose.Schema;
 
 var categorySchema = new mongoose.Schema({
