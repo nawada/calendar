@@ -1,4 +1,5 @@
-"use strict";
+'use strict';
+
 var express = require('express');
 var router = express.Router();
 var categoryService = require('../services/categoryService');
@@ -6,7 +7,7 @@ var categoryService = require('../services/categoryService');
 /* Get Categories */
 router.get('/', function (req, res) {
 	categoryService.fetchList().then(function (result) {
-		var resObject = new Object();
+		var resObject = {};
 		resObject['categories'] = result;
 		res.status(201).json(resObject);
 	},
