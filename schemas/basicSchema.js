@@ -4,8 +4,22 @@ var mongoose = require('mongoose');
 var S = require('string');
 var ParamException = require('../exception/ParamException');
 
+var STATE = {
+    disconnected: 0,
+    connected: 1,
+    connecting: 2,
+    disconnecting: 3
+};
+
 var BaseSchema = {};
 
+/**
+ * Constructor
+ * @param modelName
+ * @param schema
+ * @param mongodbUrl
+ * @returns {BaseSchema}
+ */
 BaseSchema.constructor = function (modelName, schema, mongodbUrl) {
     if (S(modelName).isEmpty()) {
         throw ParamException('modelName is empty');
@@ -15,6 +29,7 @@ BaseSchema.constructor = function (modelName, schema, mongodbUrl) {
         this._model = modelName;
         this._schema = schema;
         this._url = mongodbUrl || 'mongodb://localhost/calendar';
+        this._db = mongoose.createConnection();
     }
     return this;
 };
@@ -24,8 +39,8 @@ BaseSchema.constructor = function (modelName, schema, mongodbUrl) {
  * @private
  */
 BaseSchema._connect = function () {
-    if (!this._db || this._db.connection.readyState === 0)
-        this._db = mongoose.connect(this._url);
+    if (this._db.readyState === STATE.disconnected)
+        this._db.open(this._url);
 };
 
 /**
@@ -33,8 +48,8 @@ BaseSchema._connect = function () {
  * @private
  */
 BaseSchema._disconnect = function () {
-    if (this._db && this._db.connection.readyState === 1)
-        this._db.disconnect();
+    if (this._db.readyState === STATE.connected)
+        this._db.close();
 };
 
 /**
