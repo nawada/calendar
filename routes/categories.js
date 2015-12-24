@@ -22,7 +22,7 @@ router.get('/', function (req, res) {
 router.post('/', function (req, res) {
   // TODO: 認証
   const service = new CategoryService();
-  service.add(req.body).then(function (result) {
+  service.create(req.body).then(function (result) {
     const resObject = {};
     resObject['gen_res'] = new Array(result);
     res.status(201).json(resObject);
@@ -42,7 +42,20 @@ router.put('/:id', function(req, res) {
   },
   function (err) {
     console.log(err);
-    res.status(400).end('Post Category Failed');
+    res.status(400).end('Put Category Failed');
+  });  
+});
+
+/* Delete Category */
+router.delete('/:id', function(req, res) {
+  // TODO: 認証
+  const service = new CategoryService();
+  service.delete(req.params.id).then(function (result) {
+    res.status(204).end();
+  },
+  function (err) {
+    console.log(err);
+    res.status(400).end('Delete Category Failed');
   });  
 });
 

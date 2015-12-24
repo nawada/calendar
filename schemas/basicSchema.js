@@ -70,7 +70,7 @@ BaseSchema.find = function (conditions, callback) {
 };
 
 /**
- * Save model
+ * Save model item
  * @param schemaData object
  * @param callback
  */
@@ -96,9 +96,9 @@ BaseSchema.save = function (schemaData, callback) {
 };
 
 /**
- * Update model
+ * Update model item
  * @param query object
- * @param schemaData   object
+ * @param schemaData object
  * @param callback
  */
 BaseSchema.update = function (query, schemaData, callback) {
@@ -116,6 +116,26 @@ BaseSchema.update = function (query, schemaData, callback) {
   }
   const self = this;
   model.update(query, {$set: set}, {upsert: false}, function (err) {
+    if (callback) callback(err);
+    self._disconnect();
+  })
+};
+
+/**
+ * Remove model item
+ * @param query object
+ * @param callback
+ */
+BaseSchema.remove = function (query, callback) {
+  if (!this.schema) {
+    this.schema = new mongoose.Schema(this._schema);
+    mongoose.model(this._model, this.schema);
+  }
+
+  this._connect();
+  const model = this._db.model(this._model, this.schema);
+  const self = this;
+  model.remove(query, function (err) {
     if (callback) callback(err);
     self._disconnect();
   })
