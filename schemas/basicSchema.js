@@ -95,4 +95,30 @@ BaseSchema.save = function (schemaData, callback) {
   });
 };
 
+/**
+ * Update model
+ * @param query object
+ * @param schemaData   object
+ * @param callback
+ */
+BaseSchema.update = function (query, schemaData, callback) {
+  if (!this.schema) {
+    this.schema = new mongoose.Schema(this._schema);
+    mongoose.model(this._model, this.schema);
+  }
+
+  this._connect();
+  const model = this._db.model(this._model, this.schema);
+  const set = {};
+  for (var key in schemaData) {
+    if (!schemaData.hasOwnProperty(key)) continue;
+    set[key] = schemaData[key];
+  }
+  const self = this;
+  model.update(query, {$set: set}, {upsert: false}, function (err) {
+    if (callback) callback(err);
+    self._disconnect();
+  })
+};
+
 module.exports = BaseSchema;

@@ -35,6 +35,23 @@ class CategoryService {
       });
     });
   }
+  
+  /**
+  * Update Category
+  * @returns Promise
+  */  
+  update(id, updateData) {
+    const query = {id: id};
+    return new Promise(function (resolve, reject) {
+      Category.update(query, updateData, function (err) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve();
+        }
+      });
+    });     
+  }
 }
 
 module.exports = CategoryService;
