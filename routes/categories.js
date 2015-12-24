@@ -33,4 +33,17 @@ router.post('/', function (req, res) {
   });
 });
 
+/* Put Category */
+router.put('/:id', function(req, res) {
+  // TODO: 認証
+  const service = new CategoryService();
+  service.update(req.params.id, req.body).then(function (result) {
+    res.status(204).end();
+  },
+  function (err) {
+    console.log(err);
+    res.status(400).end('Post Category Failed');
+  });  
+});
+
 module.exports = router;
