@@ -5,10 +5,10 @@ var S = require('string');
 var ParamException = require('../exception/ParamException');
 
 var STATE = {
-    disconnected: 0,
-    connected: 1,
-    connecting: 2,
-    disconnecting: 3
+  disconnected: 0,
+  connected: 1,
+  connecting: 2,
+  disconnecting: 3
 };
 
 var BaseSchema = {};
@@ -21,17 +21,17 @@ var BaseSchema = {};
  * @returns {BaseSchema}
  */
 BaseSchema.constructor = function (modelName, schema, mongodbUrl) {
-    if (S(modelName).isEmpty()) {
-        throw ParamException('modelName is empty');
-    } else if (S(schema).isEmpty() || S(JSON.stringify(schema)).isEmpty()) {
-        throw ParamException('schema is empty');
-    } else {
-        this._model = modelName;
-        this._schema = schema;
-        this._url = mongodbUrl || 'mongodb://localhost/calendar';
-        this._db = mongoose.createConnection();
-    }
-    return this;
+  if (S(modelName).isEmpty()) {
+    throw ParamException('modelName is empty');
+  } else if (S(schema).isEmpty() || S(JSON.stringify(schema)).isEmpty()) {
+    throw ParamException('schema is empty');
+  } else {
+    this._model = modelName;
+    this._schema = schema;
+    this._url = mongodbUrl || 'mongodb://localhost/calendar';
+    this._db = mongoose.createConnection();
+  }
+  return this;
 };
 
 /**
@@ -39,8 +39,8 @@ BaseSchema.constructor = function (modelName, schema, mongodbUrl) {
  * @private
  */
 BaseSchema._connect = function () {
-    if (this._db.readyState === STATE.disconnected)
-        this._db.open(this._url);
+  if (this._db.readyState === STATE.disconnected)
+    this._db.open(this._url);
 };
 
 /**
@@ -48,8 +48,8 @@ BaseSchema._connect = function () {
  * @private
  */
 BaseSchema._disconnect = function () {
-    if (this._db.readyState === STATE.connected)
-        this._db.close();
+  if (this._db.readyState === STATE.connected)
+    this._db.close();
 };
 
 /**
@@ -58,15 +58,15 @@ BaseSchema._disconnect = function () {
  * @param callback
  */
 BaseSchema.find = function (conditions, callback) {
-    var self = this;
-    this._connect();
-    if (!this.schema) {
-        this.schema = new mongoose.Schema(this._schema);
-    }
-    this._db.model(this._model, this.schema).find(conditions, function (err, datas) {
-        if (callback) callback(err, datas);
-        self._disconnect();
-    })
+  var self = this;
+  this._connect();
+  if (!this.schema) {
+    this.schema = new mongoose.Schema(this._schema);
+  }
+  this._db.model(this._model, this.schema).find(conditions, function (err, datas) {
+    if (callback) callback(err, datas);
+    self._disconnect();
+  })
 };
 
 /**
@@ -74,23 +74,23 @@ BaseSchema.find = function (conditions, callback) {
  * @param schemaData object
  */
 BaseSchema.save = function (schemaData) {
-    if (!this.schema) {
-        this.schema = new mongoose.Schema(this._schema);
-        mongoose.model(this._model, this.schema);
-    }
+  if (!this.schema) {
+    this.schema = new mongoose.Schema(this._schema);
+    mongoose.model(this._model, this.schema);
+  }
 
-    this._connect();
-    var Model = mongoose.model(this._model);
-    var model = new Model();
-    for (var key in schemaData) {
-        if (!schemaData.hasOwnProperty(key)) continue;
-        model[key] = schemaData[key];
-    }
-    var self = this;
-    model.save(function (err) {
-        if (err) throw err;
-        self._disconnect();
-    });
+  this._connect();
+  var Model = mongoose.model(this._model);
+  var model = new Model();
+  for (var key in schemaData) {
+    if (!schemaData.hasOwnProperty(key)) continue;
+    model[key] = schemaData[key];
+  }
+  var self = this;
+  model.save(function (err) {
+    if (err) throw err;
+    self._disconnect();
+  });
 };
 
 module.exports = BaseSchema;
