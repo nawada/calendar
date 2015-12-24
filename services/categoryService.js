@@ -9,16 +9,16 @@ module.exports = service;
  * @returns Promise
  */
 service.fetchList = function () {
-    return new Promise(function (resolve, reject) {
-        Category.find({}, function(err, items){
-            resolve(items);
-            if (err) {
-                reject(err);
-            } else {
-                resolve(items);
-            }
-        });
+  return new Promise(function (resolve, reject) {
+    Category.find({}, function(err, items){
+      resolve(items);
+      if (err) {
+        reject(err);
+      } else {
+        resolve(items);
+      }
     });
+  });
 };
 
 
