@@ -22,9 +22,10 @@ class CategoryService {
 
  /**
   * Add NewCategory
+  * @param addData
   * @returns Promise
   */  
-  add(addData) {
+  create(addData) {
     return new Promise(function (resolve, reject) {
       Category.save(addData, function (err, result) {
         if (err) {
@@ -38,12 +39,32 @@ class CategoryService {
   
   /**
   * Update Category
+  * @param id
+  * @param updateData
   * @returns Promise
   */  
   update(id, updateData) {
     const query = {id: id};
     return new Promise(function (resolve, reject) {
       Category.update(query, updateData, function (err) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve();
+        }
+      });
+    });     
+  }
+
+  /**
+  * Delete Category
+  * @param id
+  * @returns Promise
+  */    
+  delete(id) {
+    const query = {id: id};
+    return new Promise(function (resolve, reject) {
+      Category.remove(query, function (err) {
         if (err) {
           reject(err);
         } else {
