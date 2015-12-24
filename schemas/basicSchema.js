@@ -72,15 +72,16 @@ BaseSchema.find = function (conditions, callback) {
 /**
  * Save model
  * @param schemaData object
+ * @param callback
  */
-BaseSchema.save = function (schemaData) {
+BaseSchema.save = function (schemaData, callback) {
   if (!this.schema) {
     this.schema = new mongoose.Schema(this._schema);
     mongoose.model(this._model, this.schema);
   }
 
   this._connect();
-  var Model = mongoose.model(this._model);
+  var Model = this._db.model(this._model);
   var model = new Model();
   for (var key in schemaData) {
     if (!schemaData.hasOwnProperty(key)) continue;
@@ -89,6 +90,7 @@ BaseSchema.save = function (schemaData) {
   var self = this;
   model.save(function (err) {
     if (err) throw err;
+    if (callback) callback(err, model);
     self._disconnect();
   });
 };
