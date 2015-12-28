@@ -62,7 +62,11 @@ class CategoryService {
         if (err) {
           reject(err);
         } else {
-          resolve();
+          const entity = {};
+          entity.id    = id;
+          entity.name  = updateData.name;
+          entity.icon  = updateData.icon;            
+          resolve(entity);
         }
       });
     });     
