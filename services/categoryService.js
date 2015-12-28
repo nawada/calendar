@@ -10,11 +10,19 @@ class CategoryService {
   fetchList() {
     return new Promise(function (resolve, reject) {
       Category.find({}, function(err, items){
-        resolve(items);
         if (err) {
           reject(err);
         } else {
-          resolve(items);
+          const categoryArray = new Array();
+          for (var i = 0; i < items.length; i ++) {
+            const category = items[i];
+            const entity = {};
+            entity.id    = category.id;
+            entity.name  = category.name;
+            entity.icon  = category.icon;
+            categoryArray.push(entity);  
+          }
+          resolve(categoryArray);  
         }
       });
     });    
