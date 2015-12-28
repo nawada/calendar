@@ -38,7 +38,9 @@ router.put('/:id', function(req, res) {
   // TODO: 認証
   const service = new CategoryService();
   service.update(req.params.id, req.body).then(function (result) {
-    res.status(204).end();
+    const resObject = {};
+    resObject['gen_res'] = new Array(result);
+    res.status(200).json(resObject);
   },
   function (err) {
     console.log(err);

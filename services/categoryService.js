@@ -10,11 +10,19 @@ class CategoryService {
   fetchList() {
     return new Promise(function (resolve, reject) {
       Category.find({}, function(err, items){
-        resolve(items);
         if (err) {
           reject(err);
         } else {
-          resolve(items);
+          const categoryArray = new Array();
+          for (var i = 0; i < items.length; i ++) {
+            const category = items[i];
+            const entity = {};
+            entity.id    = category.id;
+            entity.name  = category.name;
+            entity.icon  = category.icon;
+            categoryArray.push(entity);  
+          }
+          resolve(categoryArray);  
         }
       });
     });    
@@ -31,7 +39,11 @@ class CategoryService {
         if (err) {
           reject(err);
         } else {
-          resolve(result);
+          const entity = {};
+          entity.id    = result.id;
+          entity.name  = result.name;
+          entity.icon  = result.icon;            
+          resolve(entity);
         }
       });
     });
@@ -50,7 +62,11 @@ class CategoryService {
         if (err) {
           reject(err);
         } else {
-          resolve();
+          const entity = {};
+          entity.id    = id;
+          entity.name  = updateData.name;
+          entity.icon  = updateData.icon;            
+          resolve(entity);
         }
       });
     });     
